@@ -1,5 +1,6 @@
 package mx.edu.utez.restaurantes.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import mx.edu.utez.restaurantes.model.Cliente;
 import mx.edu.utez.restaurantes.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -35,6 +37,7 @@ public class ClienteController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
+    /*
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         try {
@@ -53,6 +56,21 @@ public class ClienteController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
+    }
+     */
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> actualizarCliente(@PathVariable Long id,
+                                                     @RequestBody Cliente nuevosDatos,
+                                                     @RequestParam(required = false) Set<Long> mesaIds) {
+        Cliente clienteActualizado = clienteService.actualizarCliente(id, nuevosDatos, mesaIds);
+        return ResponseEntity.ok(clienteActualizado);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
+        clienteService.eliminarCliente(id);
+        return ResponseEntity.noContent().build();
     }
 }
 
