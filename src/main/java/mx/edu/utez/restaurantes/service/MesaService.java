@@ -1,5 +1,7 @@
 package mx.edu.utez.restaurantes.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import mx.edu.utez.restaurantes.model.Cliente;
 import mx.edu.utez.restaurantes.model.Mesa;
 import mx.edu.utez.restaurantes.repository.MesaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ public class MesaService {
 
     @Autowired
     private MesaRepository mesaRepository;
+
+    @Autowired
+    private ClienteService clienteService;
 
     public Mesa guardarMesa(Mesa mesa) {
         Optional<Mesa> mesaExistente = mesaRepository.findByNumero(mesa.getNumero());
@@ -50,5 +55,23 @@ public class MesaService {
         } else {
             throw new IllegalArgumentException("No se encontró la mesa con id " + id);
         }
+    }
+
+    public Mesa agregarClienteAMesa(Long mesaId, Cliente cliente) {
+        Mesa mesa = mesaRepository.findById(mesaId)
+                .orElseThrow(() -> new EntityNotFoundException("Mesa no encontrada"));
+
+        if (cliente.getId() == null) {
+            cliente = clienteService.crearCliente(cliente); // Método para crear un nuevo cliente
+        } else {
+            Cliente clienteExistente = clienteService.obtenerClientePorId(cliente.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
+            cliente = clienteExistente; // Utiliza el cliente existente
+        }
+
+        mesa.getClientes().add(cliente);
+        cliente.getMesas().add(mesa);
+
+        return mesaRepository.save(mesa);
     }
 }

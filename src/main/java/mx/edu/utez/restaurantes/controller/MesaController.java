@@ -1,6 +1,9 @@
 package mx.edu.utez.restaurantes.controller;
 
+import jakarta.persistence.EntityNotFoundException;
+import mx.edu.utez.restaurantes.model.Cliente;
 import mx.edu.utez.restaurantes.model.Mesa;
+import mx.edu.utez.restaurantes.repository.MesaRepository;
 import mx.edu.utez.restaurantes.service.MesaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,9 @@ public class MesaController {
 
     @Autowired
     private MesaService mesaService;
+
+    @Autowired
+    private MesaRepository mesaRepository;
 
     @PostMapping
     public ResponseEntity<?> guardarMesa(@RequestBody Mesa mesa) {
@@ -64,6 +70,18 @@ public class MesaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar la mesa");
+        }
+    }
+
+    @PostMapping("/{mesaId}/clientes")
+    public ResponseEntity<?> agregarClienteAMesa(@PathVariable Long mesaId, @RequestBody Cliente cliente) {
+        try {
+            Mesa mesaActualizada = mesaService.agregarClienteAMesa(mesaId, cliente);
+            return ResponseEntity.ok(mesaActualizada);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al agregar cliente a la mesa");
         }
     }
 }

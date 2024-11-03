@@ -1,12 +1,12 @@
 package mx.edu.utez.restaurantes.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Getter
 @Setter
@@ -19,12 +19,19 @@ public class Mesa {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private Integer numero; // Número de la mesa
+    private Integer numero;
 
     @Column(nullable = false)
-    private Integer capacidad; // Capacidad de la mesa (número de personas)
+    private Integer capacidad;
 
     @Column(nullable = false)
-    private Boolean disponible; // Estado de la mesa (disponible o ocupada)
+    private Boolean disponible;
 
+    @ManyToMany
+    @JoinTable(
+            name = "mesa_cliente",
+            joinColumns = @JoinColumn(name = "mesa_id"),
+            inverseJoinColumns = @JoinColumn(name = "cliente_id")
+    )
+    private Set<Cliente> clientes = new HashSet<>();
 }
