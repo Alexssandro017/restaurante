@@ -1,12 +1,8 @@
 package mx.edu.utez.restaurantes.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -19,18 +15,17 @@ public class Inventario {
     private Long id;
 
     @Column(nullable = false, length = 50)
-    private String nombre; // Nombre del artículo
+    private String nombre;
 
     @Column(nullable = false)
-    private Integer cantidad; // Cantidad disponible
+    private Integer cantidad;
 
     @Column(nullable = false)
-    private Double precio; // Precio por unidad
+    private Double precio;
 
     @Column(nullable = false)
-    private Boolean activo; // Estado del artículo (disponible o no)
+    private Boolean activo;
 
     @Column(nullable = false, length = 30)
-    private String tipo; // Tipo de artículo (ej. bebida, comida, etc.)
-
+    private String tipo;
 }

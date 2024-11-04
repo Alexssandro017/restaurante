@@ -21,15 +21,21 @@ public class Cliente {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String telefono;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String correo;
 
     @ManyToMany(mappedBy = "clientes")
     @JsonIgnore
     private Set<Mesa> mesas = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
+    private Set<Orden> ordenes = new HashSet<>();
+
 
     public Cliente() {
 

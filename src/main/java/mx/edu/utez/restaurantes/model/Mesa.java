@@ -1,5 +1,6 @@
 package mx.edu.utez.restaurantes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,4 +35,9 @@ public class Mesa {
             inverseJoinColumns = @JoinColumn(name = "cliente_id")
     )
     private Set<Cliente> clientes = new HashSet<>();
+
+    @OneToMany(mappedBy = "mesa")
+    @JsonIgnore
+    private Set<Orden> ordenes = new HashSet<>();
+
 }
